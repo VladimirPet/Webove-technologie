@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<priceList>
+   <rekonstrukcia>
+      <Sluzba>Vymena rozvodov
+        <Typ>Hlinik
+        <cena>1200</cena>
+        </Typ>
+        <Typ>Med
+        <cena>800</cena>
+        </Typ>
+      </Sluzba>  
+   </rekonstrukcia>
+   <oprava>
+      <Sluzba>Oprava Zastrcka
+      <cena>50</cena>
+      </Sluzba>
+      <Sluzba>Oprava Svetlo
+      <cena>80</cena>
+      </Sluzba>
+   </oprava>
+   <novaInstalacia>
+      <Sluzba>Obycajna instalacia
+      <cena>3500</cena>
+      </Sluzba>
+      <Sluzba>Smart instalacia
+      <cena>7000</cena>
+      </Sluzba>
+   </novaInstalacia>
+</priceList>

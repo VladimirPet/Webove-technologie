@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Služby - Elektrotech s.r.o.</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo-container">
+                <img src="Logo.jpg" alt="Logo">
+            </div>
+            <div class="heading">
+                <h1>Elektrotech s.r.o.</h1>
+            </div>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <ul class="menu">
+                <li><a href="index.html">Domov</a></li>
+                <li><a href="about.html">O nás</a></li>
+                <li><a href="services.html">Služby</a></li>
+                <li><a href="gallery.html">Galéria</a></li>
+                <li><a href="contact.html">Kontakt</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <div class="container">
+            <h2>Služby</h2>
+            <p>Naša elektrikárska firma poskytuje širokú škálu služieb, ktoré zahŕňajú, ale nie sú obmedzené na:</p>
+            <ul>
+                <li>Elektrické inštalácie v domácnostiach a komerčných budovách</li>
+                <li>Údržbu a opravy elektrických systémov</li>
+                <li>Návrh a inštaláciu osvetlenia</li>
+                <li>Inštaláciu bezpečnostných systémov, ako sú napríklad alarmy a kamery</li>
+                <li>Inštaláciu a údržbu solárnych panelov</li>
+                <li>Poradenstvo a konzultácie v oblasti elektrických systémov</li>
+            </ul>
+            <p>Naši skúsení elektrotechnici sú pripravení poskytnúť vám kvalitné služby a riešenia pre vaše elektrické potreby. Nezáleží na tom, či potrebujete jednoduchú opravu alebo komplexnú inštaláciu, sme tu, aby sme vám pomohli.</p>
+            <button id="showPricesBtn">Zobraziť ceny služieb</button>
+            <div id="priceTableContainer" style="display: none;">
+                <h3>Ceny služieb</h3>
+                <table id="priceTable">
+                    <thead>
+                        <tr>
+                            <th>Služba</th>
+                            <th>Typ</th>
+                            <th>Cena</th>
+                        </tr>
+                    </thead>
+                    <tbody id="priceTableBody">
+                        <!-- Tu sa vložia údaje zo súboru XML pomocou JavaScriptu -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Elektrotech s.r.o.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById("showPricesBtn").addEventListener("click", function() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    displayPrices(this);
+                }
+            };
+            xhttp.open("GET", "priceList.xml", true);
+            xhttp.send();
+        });
+
+        function displayPrices(xml) {
+            var xmlDoc = xml.responseXML;
+            var tableBody = document.getElementById("priceTableBody");
+            tableBody.innerHTML = "";
+            var rekonstrukcia = xmlDoc.getElementsByTagName("rekonstrukcia")[0];
+            var oprava = xmlDoc.getElementsByTagName("oprava")[0];
+            var novaInstalacia = xmlDoc.getElementsByTagName("novaInstalacia")[0];
+            
+            function addRow(service, type, price) {
+                var row = "<tr><td>" + service + "</td><td>" + type + "</td><td>" + price + "</td></tr>";
+                tableBody.innerHTML += row;
+            }
+
+            Array.from(rekonstrukcia.getElementsByTagName("Sluzba")).forEach(function(service) {
+                Array.from(service.getElementsByTagName("Typ")).forEach(function(type) {
+                    var serviceName = service.firstChild.nodeValue;
+                    var typeName = type.firstChild.nodeValue;
+                    var price = type.getElementsByTagName("cena")[0].firstChild.nodeValue;
+                    addRow(serviceName, typeName, price);
+                });
+            });
+
+            Array.from(oprava.getElementsByTagName("Sluzba")).forEach(function(service) {
+                var serviceName = service.firstChild.nodeValue;
+                var price = service.getElementsByTagName("cena")[0].firstChild.nodeValue;
+                addRow(serviceName, "", price);
+            });
+
+            Array.from(novaInstalacia.getElementsByTagName("Sluzba")).forEach(function(service) {
+                var serviceName = service.firstChild.nodeValue;
+                var price = service.getElementsByTagName("cena")[0].firstChild.nodeValue;
+                addRow(serviceName, "", price);
+            });
+
+            document.getElementById("priceTableContainer").style.display = "block";
+        }
+    </script>
+</body>
+</html>

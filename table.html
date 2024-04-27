@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XML to Table</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        /* CSS štýly pre tabuľku */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #333;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<table id="priceTable">
+    <thead>
+        <tr>
+            <th>Služba</th>
+            <th>Typ</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Tu sa vložia údaje zo súboru XML pomocou AJAX -->
+    </tbody>
+</table>
+
+<script>
+    $(document).ready(function(){
+        $.ajax({
+            type: "GET",
+            url: "priceList.xml",
+            dataType: "xml",
+            success: function(xml){
+                $(xml).find('priceList').each(function(){
+                    $(this).find('rekonstrukcia').each(function(){
+                        var service = $(this).find('Sluzba').text();
+                        var types = $(this).find('Typ').map(function(){
+                            return $(this).text();
+                        }).get().join(', ');
+                        $('#priceTable tbody').append('<tr><td>'+service+'</td><td>'+types+'</td></tr>');
+                    });
+                    $(this).find('oprava').each(function(){
+                        var service = $(this).find('Sluzba').text();
+                        $('#priceTable tbody').append('<tr><td>'+service+'</td><td></td></tr>');
+                    });
+                    $(this).find('novaInstalacia').each(function(){
+                        var service = $(this).find('Sluzba').text();
+                        $('#priceTable tbody').append('<tr><td>'+service+'</td><td></td></tr>');
+                    });
+                });
+            },
+            error: function(xhr, status, error){
+                console.log(xhr.statusText);
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
